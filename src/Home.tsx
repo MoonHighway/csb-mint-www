@@ -21,9 +21,50 @@ import {
 
 const ConnectButton = styled(WalletDialogButton)``;
 
+const WalletUI = styled.div`
+  margin: 2em;
+`;
+
+const ButtonContainer = styled.div`
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const CounterText = styled.span``; // add your styles here
 
-const MintContainer = styled.div``; // add your styles here
+const Video = styled.video`
+  object-fit: fill;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+`;
+
+const Title = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5em;
+`;
+
+const Doormat = styled.div`
+  display: flex;
+`;
+
+const Logo = styled.img`
+  position: relative:
+  z-index: 20;
+  border-radius: 20px;
+  height: 300px;
+`;
+
+const MintContainer = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`; // add your styles here
 
 const MintButton = styled(Button)``; // add your styles here
 
@@ -167,45 +208,66 @@ const Home = (props: HomeProps) => {
 
   return (
     <main>
-      {wallet && (
-        <p>Wallet {shortenAddress(wallet.publicKey.toBase58() || "")}</p>
-      )}
-
-      {wallet && <p>Balance: {(balance || 0).toLocaleString()} SOL</p>}
-
-      {wallet && <p>Total Available: {itemsAvailable}</p>}
-
-      {wallet && <p>Redeemed: {itemsRedeemed}</p>}
-
-      {wallet && <p>Remaining: {itemsRemaining}</p>}
-
+      <Video src="snowing.mp4" autoPlay muted loop />
       <MintContainer>
-        {!wallet ? (
-          <ConnectButton>Connect Wallet</ConnectButton>
-        ) : (
-          <MintButton
-            disabled={isSoldOut || isMinting || !isActive}
-            onClick={onMint}
-            variant="contained"
-          >
-            {isSoldOut ? (
-              "SOLD OUT"
-            ) : isActive ? (
-              isMinting ? (
-                <CircularProgress />
-              ) : (
-                "MINT"
-              )
+        <Doormat>
+          <Logo src="logo512.png" />
+          <Title>
+            <p>Tahoe Crypto Hack Team Presents:</p>
+            <h1>Crypto Ski Bums</h1>
+            <WalletUI>
+              {wallet && (
+                <p className="wallet">
+                  Wallet:{shortenAddress(wallet.publicKey.toBase58() || "")}{" "}
+                  {(balance || 0).toLocaleString()} SOL
+                </p>
+              )}
+
+              {wallet && (
+                <p className="wallet">{itemsAvailable} Total ski bums </p>
+              )}
+
+              {wallet && (
+                <p className="wallet">{itemsRedeemed} minted ski bums</p>
+              )}
+
+              {wallet && (
+                <p className="wallet">
+                  {itemsRemaining} ski bums waiting to be minted.
+                </p>
+              )}
+            </WalletUI>
+
+            {!wallet ? (
+              <ButtonContainer>
+                <ConnectButton>Connect Wallet</ConnectButton>
+              </ButtonContainer>
             ) : (
-              <Countdown
-                date={startDate}
-                onMount={({ completed }) => completed && setIsActive(true)}
-                onComplete={() => setIsActive(true)}
-                renderer={renderCounter}
-              />
+              <MintButton
+                disabled={isSoldOut || isMinting || !isActive}
+                onClick={onMint}
+                variant="contained"
+              >
+                {isSoldOut ? (
+                  "SOLD OUT"
+                ) : isActive ? (
+                  isMinting ? (
+                    <CircularProgress />
+                  ) : (
+                    "MINT"
+                  )
+                ) : (
+                  <Countdown
+                    date={startDate}
+                    onMount={({ completed }) => completed && setIsActive(true)}
+                    onComplete={() => setIsActive(true)}
+                    renderer={renderCounter}
+                  />
+                )}
+              </MintButton>
             )}
-          </MintButton>
-        )}
+          </Title>
+        </Doormat>
       </MintContainer>
 
       <Snackbar
